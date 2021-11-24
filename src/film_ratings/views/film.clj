@@ -20,7 +20,7 @@
                (text-area {:class "mb-3 form-control" :placeholder "enter film description"} :description)]
               [:div.form-group.col-12
                (label :ratings "rating (1-5):")]
-              [:div.form-group.col-12
+              [:div.form-group.btn-group.col-12
                (map (labeled-radio "rating") (repeat 5 false) (range 1 6))]
               [:div.form-group.col-12.text-center
                (submit-button {:class "btn btn-primary text-center"} "add")])]]))
@@ -41,7 +41,7 @@
       [:div.col-10 rating]])])
 
 (defn film-view
-  [{:keys [name :description rating]} {:keys [errors messages]}]
+  [{:keys [name description rating]} {:keys [errors messages]}]
   (page
    [:div.container.jumbotron.bg-light
     [:div.row
@@ -51,6 +51,20 @@
       (for [error (doall errors)]
         [:div.row.alert.alert-danger
          [:div.col error]]))
+    (when messages
+      (for [message (doall messages)]
+        [:div.row.alert.alert-success
+         [:div.col message]]))]))
+
+(defn list-films-view
+  [films {:keys [messages]}]
+  (page
+   [:div.container.jumbotron.bg-light
+    [:div.row [:h2 "films"]]
+    (for [{:keys [name description rating]} (doall films)]
+      [:div
+       (film-attributes-view name description rating)
+       [:hr]])
     (when messages
       (for [message (doall messages)]
         [:div.row.alert.alert-success
